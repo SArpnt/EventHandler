@@ -1,4 +1,4 @@
-/*class EventHandler*/ {
+class EventHandler {
 	constructor(e, s = !!e) {
 		if (!Array.isArray(e)) throw new TypeError("Paramater 1 must be of type 'array'");
 		this.strict = !!s;
