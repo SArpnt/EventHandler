@@ -1,6 +1,6 @@
 class EventHandler {
 	constructor(e, s = !!e) {
-		if (!Array.isArray(e)) throw new TypeError("Paramater 1 must be of type 'array'");
+		if (!(Array.isArray(e) || typeof e == 'undefined')) throw new TypeError("Paramater 1 must be of type 'array'");
 		this.strict = !!s;
 		this.events = {};
 		this.Event = function () {
