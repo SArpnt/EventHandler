@@ -1,6 +1,6 @@
 class EventHandler {
 	constructor(e, s = !!e) {
-		if (!(Array.isArray(e) || typeof e == 'undefined')) throw new TypeError("Paramater 1 must be of type 'array'");
+		if (!(Array.isArray(e) || typeof e == 'undefined')) throw new TypeError("Paramater 1 must be type 'array'");
 		this.strict = !!s;
 		this.events = {};
 		this.Event = function () {
@@ -12,7 +12,7 @@ class EventHandler {
 
 	on(name, func) {
 		if (typeof func != 'function')
-			throw new TypeError(`Input 2 of EventHandler.on is a '${typeof func}' instead of a 'function'`);
+			throw new TypeError(`Input 2 is type '${typeof func}' instead of 'function'`);
 		if (this.strict && !this.events[name])
 			console.warn(`Event '${name}' does not exist`);
 		else {
@@ -21,7 +21,7 @@ class EventHandler {
 		}
 	}
 
-	off(name, id) { //id could be a function or a number (array index)
+	off(name, id) { // id could be a function or a number (array index)
 		if (!this.events[name]) {
 			if (this.strict) console.warn(`Event '${name}' does not exist`);
 			return;
@@ -39,7 +39,7 @@ class EventHandler {
 		else if (typeof id == 'undefined')
 			return this.events[name].listeners.splice(0, Infinity);
 		else
-			throw new TypeError(`Input 2 of EventHandler.off is a '${typeof a}' instead of a 'function' or 'number'`);
+			throw new TypeError(`Input 2 is type '${typeof a}' instead of 'function' or 'number'`);
 	}
 
 	emit(name, ...data) {
@@ -64,8 +64,9 @@ class EventHandler {
 		return returns;
 	}
 }
-EventHandler.prototype.addEventListener = EventHandler.prototype.on;
-EventHandler.prototype.removeEventListener = EventHandler.prototype.off;
-EventHandler.prototype.dispatchEvent = EventHandler.prototype.emit;
-EventHandler.prototype.dispatchEventContext = EventHandler.prototype.emitContext =
-	EventHandler.prototype.dispatchEventCall = EventHandler.prototype.emitCall;
+let x = EventHandler.prototype;
+x.addEventListener = x.add = x.on;
+x.removeEventListener = x.remove = x.off;
+x.dispatchEvent = x.dispatch = x.send = x.emit;
+x.dispatchEventContext = x.dispatchContext = x.sendContext = x.emitContext =
+	x.dispatchEventCall = x.dispatchCall = x.sendCall = x.emitCall;
