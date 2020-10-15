@@ -28,15 +28,20 @@ class EventHandler {
 		}
 
 		if (typeof id == 'function') {
-			let i = 0;
-			this.events[name].listeners = this.events[name].listeners.filter(
-				e => e == id && (i++, 0)
-			);
-			return i;
+			let r = 0;
+			this.events[name].listeners.forEach((e, i) => {
+				if (e == id) {
+					r++;
+					delete this.events[name].listeners[i];
+				}
+			});
+			return r;
 		}
-		else if (typeof id == 'number')
-			return this.events[name].listeners.splice(id, 1)[0];
-		else if (typeof id == 'undefined')
+		else if (typeof id == 'number') {
+			let r = this.events[name].listeners[id];
+			delete this.events[name].listeners[id];
+			return r;
+		} else if (typeof id == 'undefined')
 			return this.events[name].listeners.splice(0, Infinity);
 		else
 			throw new TypeError(`Input 2 is type '${typeof a}' instead of 'function' or 'number'`);
@@ -54,9 +59,9 @@ class EventHandler {
 				this.events[name] = new this.Event;
 		let returns = [];
 		this.events[name].ran++;
-		for (let f of this.events[name].listeners)
+		for (let f in this.events[name].listeners)
 			try {
-				returns.push(f.apply(context, data));
+				returns.push(this.events[name].listeners[f].apply(context, data));
 			} catch (e) {
 				console.error(e);
 				returns.push(e);
@@ -65,8 +70,8 @@ class EventHandler {
 	}
 }
 let x = EventHandler.prototype;
-x.addEventListener = x.add = x.on;
-x.removeEventListener = x.remove = x.off;
-x.dispatchEvent = x.dispatch = x.send = x.emit;
-x.dispatchEventContext = x.dispatchContext = x.sendContext = x.emitContext =
-	x.dispatchEventCall = x.dispatchCall = x.sendCall = x.emitCall;
+x.addEventListener = x.add = x.when = x.on;
+x.removeEventListener = x.remove = x.abort = x.off;
+x.dispatchEvent = x.dispatch = x.send = x.trigger = x.emit;
+x.dispatchEventContext = x.dispatchContext = x.sendContext = x.triggerContext = x.emitContext =
+	x.dispatchEventCall = x.dispatchCall = x.sendCall = x.triggerCall = x.emitCall;
